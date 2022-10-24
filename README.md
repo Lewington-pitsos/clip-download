@@ -9,4 +9,6 @@
 
 4. place the JSON file in the root of the repository 
 
-5. run download.py
+5. create a new folder in the root called "hd"
+
+5. `python download.py`
