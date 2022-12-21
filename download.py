@@ -27,9 +27,17 @@ for row in data:
                 img.verify()
 
                 img = Image.open(testpath)
-                img.save(os.path.join('hd', path))
+                image_path = os.path.join('hd', path)
+                img.save(image_path)
                 os.remove(testpath)
 
+                parts = image_path.split(".")
+                parts.pop(len(parts)-1)
+                parts.append("txt")
+                captionpath = ".".join(parts)
+                captionfile = open(captionpath,"w")
+                captionfile.write(image_caption)
+                captionfile.close()
                 print('Image sucessfully Downloaded')
                 count+=1
             except Exception as e:
