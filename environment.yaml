@@ -1,0 +1,9 @@
+name: CLIPdl
+channels:
+  - defaults
+dependencies:
+  - python=3.10
+  - pip
+  - pip:
+    - pillow==9.2.0
+    - requests

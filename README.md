@@ -1,6 +1,17 @@
 # clip-download
  download images from LAION clip front
  
+ 
+# Setup
+
+This part requires anaconda.
+
+1. run setup.bat
+
+4. run user.bat to open the console.
+
+# Usage
+
 1. Visit [Laion](https://rom1504.github.io/clip-retrieval/?back=https%3A%2F%2Fknn5.laion.ai&index=laion5B&useMclip=false)
 
 2. put in a search, e.g. "cats"
@@ -11,4 +22,4 @@
 
 5. create a new folder in the root called "hd"
 
-5. `python download.py`
+5. type `python download.py` into the console and press enter.
