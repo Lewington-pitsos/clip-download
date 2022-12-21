@@ -8,11 +8,7 @@ This requires anaconda. Recommended if you want to keep your python install clea
 
 1. run setup.bat
 
-2. create a shortcut for run.bat
-
-3. edit the shortcut properties and in the target feild add cmd /k before the path (e.g. cmd /k "path\to\bat\file")
-
-4. run the shortcut to open the console.
+4. run user.bat to open the console.
 
 # Usage
 
