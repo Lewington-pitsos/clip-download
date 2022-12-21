@@ -4,7 +4,7 @@
  
 # Setup
 
-This requires anaconda. Recommended if you want to keep your python install clean.
+This part requires anaconda.
 
 1. run setup.bat
 
