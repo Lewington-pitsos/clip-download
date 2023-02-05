@@ -5,6 +5,8 @@ import sys
 import json
 import concurrent.futures
 import requests
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 
 def download_file(item, save_path):
     # Get the file name from the URL
@@ -15,12 +17,17 @@ def download_file(item, save_path):
     save_location = os.path.join(save_path, f"{id}.{extension}")
 
     # Check if the file is a png or jpg
-    if extension not in ["png", "PNG", "jpg", "JPG", "jpeg", "JPEG"]:
+    if extension not in ["png", "jpg", "jpeg"]:
         print(f"\nSkipping {id}.{extension}")
         return
 
     # Download the file
-    response = requests.get(url, stream=True)
+    session = requests.Session()
+    retry = Retry(total=5, backoff_factor=0.1, status_forcelist=[ 500, 502, 503, 504 ])
+    adapter = HTTPAdapter(max_retries=retry)
+    session.mount('http://', adapter)
+    session.mount('https://', adapter)
+    response = session.get(url, stream=True)
     total_size = int(response.headers.get("Content-Length", 0))
     progress = 0
     with open(save_location, "wb") as f:
@@ -56,7 +63,4 @@ if __name__ == "__main__":
     # Get the name of the JSON file and the download location from the command-line arguments
     json_file = sys.argv[1]
     save_path = os.path.splitext(json_file)[0] if len(sys.argv) < 3 else sys.argv[2]
-    max_workers = 8 if len(sys.argv) < 4 else int(sys.argv[3])
-
-    # Call the main function
-    main(json_file, save_path, max_workers)
+    max_workers = 8 if len(sys.argv) < 4 else int(sys.
