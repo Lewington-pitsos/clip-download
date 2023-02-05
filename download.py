@@ -1,3 +1,5 @@
+#!/opt/homebrew/anaconda3/bin/python
+
 import os
 import sys
 import json
@@ -18,7 +20,7 @@ def download_file(url, save_path):
             progress += len(data)
             f.write(data)
             done = int(50 * progress / total_size)
-            print(f"\r[{'=' * done}>{' ' * (50-done)}] {progress}/{total_size}", end="")
+            print(f"{file_name}: [{'=' * done}>{' ' * (50-done)}] {progress}/{total_size}", end="")
     print(f"\nDownloaded {file_name}")
 
 def main(json_file, save_path):
@@ -38,12 +40,11 @@ def main(json_file, save_path):
 if __name__ == "__main__":
     # Check if the name of the JSON file and the download location were passed as arguments
     if len(sys.argv) < 3:
-        print("Error: missing arguments for JSON file name and download location")
-        sys.exit(1)
-
-    # Get the name of the JSON file and the download location from the command-line arguments
-    json_file = sys.argv[1]
-    save_path = sys.argv[2]
+        json_file = sys.argv[1]
+        save_path = os.path.splitext(json_file)[0]
+    else:
+        json_file = sys.argv[1]
+        save_path = sys.argv[2]
 
     # Call the main function
     main(json_file, save_path)
