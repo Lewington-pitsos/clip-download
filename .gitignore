@@ -6,3 +6,8 @@ images/
 *.JPEG
 *.jpg
 *.PNG
+.DS_Store
+fidentify.log
+holding_id.zip
+male_passport.zip
+female_passport.zip
