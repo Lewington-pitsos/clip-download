@@ -1,17 +1,18 @@
-#!/opt/homebrew/anaconda3/bin/python
+#!/usr/bin/env python
+
 import os
 import sys
 import json
 import concurrent.futures
 import requests
-import imghdr
+import subprocess
 
 def download_file(item, save_path):
     # Get the file name from the URL
     url = item["url"]
     file_name = url.split("/")[-1]
     id = item["id"]
-    extension = file_name.split(".")[-1]
+    extension = file_name.split(".")[-1].split("?")[0]
     save_location = os.path.join(save_path, f"{id}.{extension}")
 
     # Check if the file is a png or jpg
@@ -21,20 +22,20 @@ def download_file(item, save_path):
 
     # Download the file
     response = requests.get(url, stream=True)
-    total_size = int(response.headers.get("Content-Length", 0))
-    progress = 0
     with open(save_location, "wb") as f:
-        for data in response.iter_content(1024):
-            progress += len(data)
-            f.write(data)
+        f.write(response.content)
             
-    # Check if the saved file is a valid image
-    if imghdr.what(save_location) is None:
+    # Check if the image is malformed or truncated
+    cmd = f"identify ' {save_location}"
+    result = subprocess.run(cmd.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    error = result.stdout.decode().strip()
+    if error == "":
         os.remove(save_location)
-        print(f"\nRemoving {id}.{extension} due to corruption")
+        print(f"\nDeleting {id}.{extension}: {error}")
+    else:
+        print(f"\nDownloaded {id}.{extension}")
         return
-    print(f"\nDownloaded {id}.{extension}")
-
+    
 
 def main(json_file, save_path=None, max_workers=8):
     # Load the JSON file into memory
@@ -65,4 +66,5 @@ if __name__ == "__main__":
     save_path = sys.argv[2] if len(sys.argv) >= 3 else None
     max_workers = int(sys.argv[3]) if len(sys.argv) >= 4 else 8
 
-    # Call the
+    # Call the main function
+    main(json_file, save_path, max_workers)
