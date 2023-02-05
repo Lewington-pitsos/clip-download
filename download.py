@@ -1,10 +1,10 @@
 #!/opt/homebrew/anaconda3/bin/python
-
 import os
 import sys
 import json
 import concurrent.futures
 import requests
+import imghdr
 
 def download_file(item, save_path):
     # Get the file name from the URL
@@ -27,6 +27,12 @@ def download_file(item, save_path):
         for data in response.iter_content(1024):
             progress += len(data)
             f.write(data)
+            
+    # Check if the saved file is a valid image
+    if imghdr.what(save_location) is None:
+        os.remove(save_location)
+        print(f"\nRemoving {id}.{extension} due to corruption")
+        return
     print(f"\nDownloaded {id}.{extension}")
 
 
@@ -59,5 +65,4 @@ if __name__ == "__main__":
     save_path = sys.argv[2] if len(sys.argv) >= 3 else None
     max_workers = int(sys.argv[3]) if len(sys.argv) >= 4 else 8
 
-    # Call the main function
-    main(json_file, save_path, max_workers)
+    # Call the
