@@ -44,4 +44,20 @@ def main(json_file, save_path=None, max_workers=8):
 
     # Download the files in parallel
     with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
-        futures = [executor.submit(download_
+        futures = [executor.submit(download_file, item, save_path) for item in data]
+        for future in concurrent.futures.as_completed(futures):
+            future.result()
+
+if __name__ == "__main__":
+    # Check if the name of the JSON file was passed as an argument
+    if len(sys.argv) < 2:
+        print("Error: missing argument for JSON file name")
+        sys.exit(1)
+
+    # Get the name of the JSON file from the command-line arguments
+    json_file = sys.argv[1]
+    save_path = sys.argv[2] if len(sys.argv) >= 3 else None
+    max_workers = int(sys.argv[3]) if len(sys.argv) >= 4 else 8
+
+    # Call the main function
+    main(json_file, save_path, max_workers)
